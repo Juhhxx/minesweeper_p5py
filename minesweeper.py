@@ -234,6 +234,7 @@ def custom_rec(x1,y1,width,height,inside,color,thicc,lcolor):
 
 
 def draw():
+    
     global doIt,count,game_on,bombs,start_time,face
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
