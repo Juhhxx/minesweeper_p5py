@@ -36,11 +36,18 @@ game_on = True
 
 def setup():
     
-    global bombs,start_time,face,uncovered_spaces
+    global bombs,start_time,face
     size(500,600)
     
+    # for i in range (20): # seleção de casas para terem minas
+        
+    #     mX = random.randrange(10)
+    #     mY = random.randrange(10)
+       
+    #     minas.append((mX,mY)) # inserção na lista "minas"
+    
     casas = 0
-    num_bombs = random.randrange(10,30) # escolha aleatória do numero de bombas
+    num_bombs = random.randrange(10,30) # ecolha aleatória do numero de bombas
     
     while casas != num_bombs: 
         
@@ -75,11 +82,47 @@ def setup():
     for line in campo: # contagem das bombas totais
         
         bombs = bombs + line.count("bomb")
+        
+    for space in safe:
+        
+        indX,indY = space
+        count = 0
+        # código para ver quantas bombas estão à votla de cada a quadrado
+        if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+            
+            count = check_line_abv(count,indX,indY,0) + check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
+        elif indY == 0 and indX > 0 and indX < 9:
+            
+            count = check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
+        elif indY == 9 and indX > 0 and indX < 9:
+            
+            count = check_line(count,indX,indY,0) + check_line_abv(count,indX,indY,0)
+        elif indX == 0 and indY > 0 and indY < 9:
+            
+            count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
+        elif indX == 9 and indY > 0 and indY < 9:
+            
+            count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
+        elif indX == 0 and indY == 0:
+            
+            count = check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
+        elif indX == 9 and indY == 0:
+            
+            count = check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
+        elif indX == 0 and indY == 9:
+            
+            count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1)
+        elif indX == 9 and indY == 9:
+            
+            count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2)
+            
+        campo[indY][indX] = count
     
     print(bombs,"\n")
     print(minas,"\n")
     print(safe,"\n")
-    print(campo,"\n")
+    for line in campo:
+        print(line)
     
     start_time = time.time()
     face = ":)"
@@ -131,47 +174,17 @@ def check_line_blw(count,indX,indY,mode):
    
 def adj_mines(indX,indY):
     
-    global safe,count
+    global safe,count,game_on
     
     if (indX,indY) in safe:   
-         
-        count = 0
 
         print("IndY:",indY)
         print("IndX:",indX)
 
 
-        # código para ver quantas bombas estão à votla de cada a quadrado
-        if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+        count = int(campo[indY][indX])
             
-            count = check_line_abv(count,indX,indY,0) + check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-        elif indY == 0 and indX > 0 and indX < 9:
-            
-            count = check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-        elif indY == 9 and indX > 0 and indX < 9:
-            
-            count = check_line(count,indX,indY,0) + check_line_abv(count,indX,indY,0)
-        elif indX == 0 and indY > 0 and indY < 9:
-            
-            count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-        elif indX == 9 and indY > 0 and indY < 9:
-            
-            count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
-        elif indX == 0 and indY == 0:
-            
-            count = check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-        elif indX == 9 and indY == 0:
-            
-            count = check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
-        elif indX == 0 and indY == 9:
-            
-            count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1)
-        elif indX == 9 and indY == 9:
-            
-            count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2)
-            
-        
-        if count == 0:
+        if count == 0 and game_on:
         
             empty_spaces(indX,indY)
         
@@ -182,18 +195,26 @@ def adj_mines(indX,indY):
         
     print("Count:",count)
         
-    
-        
-    
     return indX,indY,count    
 
 def empty_spaces(indX,indY):
     
-    global count
+    indX -= 1
+    custom_rec(indX*50,indY*50,50,50,True,white,2,black)
+    indX += 2
+    custom_rec(indX*50,indY*50,50,50,True,white,2,black)
+    indY -= 1
+    custom_rec(indX*50,indY*50,50,50,True,white,2,black)
+    indX -= 1
+    custom_rec(indX*50,indY*50,50,50,True,white,2,black)
+    indX -= 1
+    custom_rec(indX*50,indY*50,50,50,True,white,2,black)
+    
+    # _,_,c = adj_mines(indX,indY)
+    # draw_numbers(indX,indY,3)
     
     print("CARALHO")
-    
-                           
+             
 def draw_numbers(indX,indY,count):
     
     r,g,b = number_colors[count - 1]
@@ -215,17 +236,20 @@ def draw_numbers(indX,indY,count):
 def game_over():
     global game_on,face
     
+    game_on = False
+    
     for mine in minas:
             
             cX,cY = mine
             fill(255,0,0)
             strokeWeight(1)
             circle(25 + (cX * 50),25 + (cY * 50),40)
+            
     for space in safe:
         
         x,y = space
-        xC,yC,c = adj_mines(x,y)
-        draw_numbers(xC,yC,c)
+        _,_,c = adj_mines(x,y)
+        draw_numbers(x,y,c)
     
     face = ":("
     scale(4)
@@ -233,7 +257,6 @@ def game_over():
     translate(35,50)
     fill(255,0,0)
     text("GAME OVER",0,0)
-    game_on = False
 
 def game_win():
     
@@ -345,7 +368,6 @@ def draw():
         
         custom_rec(int(mouse_x/50)*50,int(mouse_y/50)*50,50,50,True,white,2,black)
         x,y,c = adj_mines(int(mouse_x/50),int(mouse_y/50))
-        
         draw_numbers(x,y,c)
     
     if len(uncovered) == len(safe):
