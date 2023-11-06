@@ -28,6 +28,7 @@ campo = [[0,0,0,0,0,0,0,0,0,0],
 # listas para as minas, espaços seguros, modos de checar bombas e ordem das cores
 minas = []
 safe = []
+uncovered = []
 range_mode = [(1,2),(0,2),(1,1)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
 doIt = True
@@ -35,15 +36,30 @@ game_on = True
 
 def setup():
     
-    global bombs,start_time,face
+    global bombs,start_time,face,uncovered_spaces
     size(500,600)
     
-    for i in range (20): # seleção de casas para terem minas
+    # for i in range (20): # seleção de casas para terem minas
         
-        mX = random.randrange(10)
-        mY = random.randrange(10)
+    #     mX = random.randrange(10)
+    #     mY = random.randrange(10)
+       
+    #     minas.append((mX,mY)) # inserção na lista "minas"
+    
+    casas = 0
+    num_bombs = random.randrange(10,30) # ecolha aleatória do numero de bombas
+    
+    while casas != num_bombs: 
         
-        minas.append((mX,mY)) # inserção na lista "minas"
+        mX = random.randrange(10) # escolha do X
+        mY = random.randrange(10) # escolha do Y
+        if (mX,mY) in minas: # verificação de essa casa ja foi escolhida
+            
+            pass
+        else:
+            
+            minas.append((mX,mY)) # inserção na lista "minas"
+            casas += 1 # diz quantas bombas ja foram colocadas 
         
     for y in range (len(campo)): # verificação das casas seguras
         
@@ -76,6 +92,7 @@ def setup():
     face = ":)"
     
 
+# funções que correm o jogo
     
 def check_line_abv(count,indX,indY,mode):
     
@@ -135,46 +152,36 @@ def adj_mines(indX,indY):
         if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
             
             count = check_line_abv(count,indX,indY,0) + check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-            draw_numbers(indX,indY,count)
         elif indY == 0 and indX > 0 and indX < 9:
             
             count = check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-            draw_numbers(indX,indY,count)
         elif indY == 9 and indX > 0 and indX < 9:
             
             count = check_line(count,indX,indY,0) + check_line_abv(count,indX,indY,0)
-            draw_numbers(indX,indY,count)
         elif indX == 0 and indY > 0 and indY < 9:
             
             count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-            draw_numbers(indX,indY,count)
         elif indX == 9 and indY > 0 and indY < 9:
             
             count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
-            draw_numbers(indX,indY,count)
         elif indX == 0 and indY == 0:
             
             count = check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-            draw_numbers(indX,indY,count)
-            
         elif indX == 9 and indY == 0:
             
             count = check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
-            draw_numbers(indX,indY,count)
-            
         elif indX == 0 and indY == 9:
             
             count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1)
-            draw_numbers(indX,indY,count)
-            
         elif indX == 9 and indY == 9:
             
             count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2)
-            draw_numbers(indX,indY,count)
     else:
         
         game_over()
-                    
+    
+    return indX,indY,count    
+                           
 def draw_numbers(indX,indY,count):
     
     r,g,b = number_colors[count - 1]
@@ -186,6 +193,12 @@ def draw_numbers(indX,indY,count):
         pass
     else:
         text(str(count),20 + (indX * 50),20 + (indY * 50))
+    
+    if (indX,indY) in uncovered:
+        
+        pass
+    else:
+        uncovered.append((indX,indY))
                 
 def game_over():
     global game_on,face
@@ -199,7 +212,8 @@ def game_over():
     for space in safe:
         
         x,y = space
-        adj_mines(x,y)
+        xC,yC,c = adj_mines(x,y)
+        draw_numbers(xC,yC,c)
     
     face = ":("
     scale(4)
@@ -208,8 +222,45 @@ def game_over():
     fill(255,0,0)
     text("GAME OVER",0,0)
     game_on = False
+
+def game_win():
+    
+    global game_on,face
+    
+    face = "B)"
+    scale(4)
+    strokeWeight(5)
+    translate(35,50)
+    fill(0,255,0)
+    text("YOU WIN!!",0,0)
+    game_on = False
+
            
-                
+def UI():
+    
+    global bombs,elapsed_time
+    push()
+    custom_rec(0,501,500,100,True,lgray,0,black)
+    fill(0)
+    scale(2)
+    translate(10,260)
+    text("BOMBS:",0,0)
+    translate(0,10)
+    text(str(bombs),0,0)
+    translate(200,0)
+    text(str(elapsed_time),0,0)
+    translate(0,-10)
+    text("TIME:",0,0)
+    pop()
+    push()
+    noStroke()
+    translate(240,520)
+    fill(0)
+    scale(4)
+    text(str(face),0,0)
+    pop()               
+         
+# funções para definir formas
                 
 def custom_rec(x1,y1,width,height,inside,color,thicc,lcolor):
     
@@ -235,29 +286,10 @@ def custom_rec(x1,y1,width,height,inside,color,thicc,lcolor):
 
 def draw():
     
-    global doIt,count,game_on,bombs,start_time,face
+    global doIt,count,game_on,bombs,start_time,face,elapsed_time
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
-    push()
-    custom_rec(0,501,500,100,True,lgray,0,black)
-    fill(0)
-    scale(2)
-    translate(10,260)
-    text("BOMBS:",0,0)
-    translate(0,10)
-    text(str(bombs),0,0)
-    translate(200,0)
-    text(str(elapsed_time),0,0)
-    translate(0,-10)
-    text("TIME:",0,0)
-    pop()
-    push()
-    noStroke()
-    translate(240,520)
-    fill(0)
-    scale(4)
-    text(str(face),0,0)
-    pop()
+    UI()
     
     if key == "ENTER":
         
@@ -297,7 +329,13 @@ def draw():
     if  mouse_is_pressed and game_on:
         
         custom_rec(int(mouse_x/50)*50,int(mouse_y/50)*50,50,50,True,white,2,black)
-        adj_mines(int(mouse_x/50),int(mouse_y/50))
+        x,y,c = adj_mines(int(mouse_x/50),int(mouse_y/50))
+        
+        draw_numbers(x,y,c)
+    
+    if len(uncovered) == len(safe):
+        
+        game_win()
 
 
 run()
