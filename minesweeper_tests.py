@@ -416,24 +416,6 @@ def empty_spaces(indX,indY,count):
                 print("DONE B")
             
             print("CARALHO")
-    
-             
-def draw_numbers(indX,indY,count):
-    
-    r,g,b = number_colors[count - 1]
-    custom_rec(int(indX)*50,int(indY)*50,50,50,True,white,2,black)
-    fill(r,g,b)
-    strokeWeight(3)
-    
-    if count == 0:
-        
-        pass
-    else:
-        text(str(count),20 + (indX * 50),20 + (indY * 50))
-    
-    if (indX,indY) not in uncovered:
-        
-        uncovered.append((indX,indY))
                 
 def game_over():
     global game_on,face
@@ -518,6 +500,34 @@ def custom_rec(x1,y1,width,height,inside,color,thicc,lcolor):
     
     rect(x1,y1,width,height)
 
+def draw_flag(x,y,color):
+    
+    translate(x,y)
+    custom_rec(0,0,50,50,True,white,2,black)
+    r,g,b = color
+    fill(r,g,b)
+    stroke(0)
+    strokeWeight(2)
+    rect(17,15,5,30)
+    triangle(17,10,17,30,37,20)
+
+def draw_numbers(indX,indY,count):
+    
+    r,g,b = number_colors[count - 1]
+    custom_rec(int(indX)*50,int(indY)*50,50,50,True,white,2,black)
+    fill(r,g,b)
+    strokeWeight(3)
+    
+    if count == 0:
+        
+        pass
+    else:
+        text(str(count),20 + (indX * 50),20 + (indY * 50))
+    
+    if (indX,indY) not in uncovered:
+        
+        uncovered.append((indX,indY))
+
 
 
 def draw():
@@ -566,10 +576,14 @@ def draw():
             
         doIt = False
     
-    if  mouse_is_pressed and game_on:
+    if  mouse_is_pressed and game_on and mouse_button == LEFT:
         
         x,y,c = adj_mines(int(mouse_x/50),int(mouse_y/50))
         draw_numbers(x,y,c)
+        
+    if  mouse_is_pressed and game_on and mouse_button == RIGHT:
+        
+        draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
     
     if len(uncovered) == len(safe):
         
