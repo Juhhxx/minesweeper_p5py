@@ -29,6 +29,7 @@ campo = [[0,0,0,0,0,0,0,0,0,0],
 minas = []
 safe = []
 uncovered = []
+flagged = []
 range_mode = [(1,2),(0,2),(1,1),(1,0),(0,0),(-1,2)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
 doIt = True
@@ -195,227 +196,252 @@ def adj_mines(indX,indY):
     return indX,indY,count    
 
 def empty_spaces(indX,indY,count):
-
-    while count == 0:
         
-        if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
-                
-            indYb = indY - 1
+    if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+            
+        indYb = indY - 1
+        for i in range (3):
+            
+            indXb = indX + 1
+            
             for i in range (3):
                 
-                indXb = indX + 1
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (3):
-                    
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
-                    
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
-            
-            print("CARALHO")
-        elif indY == 0 and indX > 0 and indX < 9:
-            
-            indYb = indY
-            for i in range (2):
                 
-                indXb = indX + 1
+                if (indXb,indYb) not in uncovered:
+                    
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
+                    
+                indXb -= 1
+                print("DONE A")
                 
-                for i in range (3):
-                    
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
-                    
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indY == 0 and indX > 0 and indX < 9:
+        
+        indYb = indY
+        for i in range (2):
             
-            print("CARALHO")
-        elif indY == 9 and indX > 0 and indX < 9:
+            indXb = indX + 1
             
-            indYb = indY - 1
-            for i in range (2):
-                
-                indXb = indX + 1
-                
-                for i in range (3):
-                    
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
-                    
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
-            
-            print("CARALHO")
-        elif indX == 0 and indY > 0 and indY < 9:
-            
-            indYb = indY - 1
             for i in range (3):
                 
-                indXb = indX + 1
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indY == 9 and indX > 0 and indX < 9:
+        
+        indYb = indY - 1
+        for i in range (2):
             
-            print("CARALHO")
-        elif indX == 9 and indY > 0 and indY < 9:
+            indXb = indX + 1
             
-            indYb = indY - 1
             for i in range (3):
                 
-                indXb = indX
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 0 and indY > 0 and indY < 9:
+        
+        indYb = indY - 1
+        for i in range (3):
             
-            print("CARALHO")
-        elif indX == 0 and indY == 0:
+            indXb = indX + 1
             
-            indYb = indY
             for i in range (2):
                 
-                indXb = indX + 1
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 9 and indY > 0 and indY < 9:
+        
+        indYb = indY - 1
+        for i in range (3):
             
-            print("CARALHO")
-        elif indX == 9 and indY == 0:
+            indXb = indX
             
-            indYb = indY
             for i in range (2):
                 
-                indXb = indX
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 0 and indY == 0:
+        
+        indYb = indY
+        for i in range (2):
             
-            print("CARALHO")
-        elif indX == 0 and indY == 9:
+            indXb = indX + 1
             
-            indYb = indY - 1
+            for i in range (2):
+                
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
+                
+                
+                if (indXb,indYb) not in uncovered:
+                    
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
+                    
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 9 and indY == 0:
+        
+        indYb = indY
+        for i in range (2):
+            
+            indXb = indX
+            
+            for i in range (2):
+                
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
+                
+                
+                if (indXb,indYb) not in uncovered:
+                    
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
+                    
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 0 and indY == 9:
+        
+        indYb = indY - 1
 
+        for i in range (2):
+            
+            indXb = indX + 1
+            
             for i in range (2):
                 
-                indXb = indX + 1
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
-            
-            print("CARALHO")
-        elif indX == 9 and indY == 9:
-            
-            indYb = indY - 1
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
+    elif indX == 9 and indY == 9:
+        
+        indYb = indY - 1
 
+        for i in range (2):
+            
+            indXb = indX
+            
             for i in range (2):
                 
-                indXb = indX
+                count = int(campo[indYb][indXb])
+                draw_numbers(indXb,indYb,count)
                 
-                for i in range (2):
+                
+                if (indXb,indYb) not in uncovered:
                     
-                    count = int(campo[indYb][indXb])
-                    draw_numbers(indXb,indYb,count)
+                    uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
-                    
-                    if (indXb,indYb) not in uncovered:
-                        
-                        uncovered.append((indXb,indY))
-                        
-                    indXb -= 1
-                    print("DONE A")
-                    
-                indYb += 1
-                print("DONE B")
-            
-            print("CARALHO")
+                indXb -= 1
+                print("DONE A")
+                
+            indYb += 1
+            print("DONE B")
+        
+        print("CARALHO")
                 
 def game_over():
     global game_on,face
@@ -510,6 +536,10 @@ def draw_flag(x,y,color):
     strokeWeight(2)
     rect(17,15,5,30)
     triangle(17,10,17,30,37,20)
+    
+    if (x/50,y/50) not in flagged:
+        
+        flagged.append((x/50,y/50))
 
 def draw_numbers(indX,indY,count):
     
@@ -524,11 +554,13 @@ def draw_numbers(indX,indY,count):
     else:
         text(str(count),20 + (indX * 50),20 + (indY * 50))
     
+    if(indX,indY) in flagged:
+        
+        flagged.remove((indX,indY))
+    
     if (indX,indY) not in uncovered:
         
         uncovered.append((indX,indY))
-
-
 
 def draw():
     
@@ -536,6 +568,8 @@ def draw():
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
     UI()
+
+    # cheat codes
     
     if key == "ENTER":
         
@@ -585,7 +619,7 @@ def draw():
         
         draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
     
-    if len(uncovered) == len(safe):
+    if uncovered == safe or flagged == minas:
         
         game_win()
 

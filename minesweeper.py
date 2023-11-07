@@ -29,6 +29,7 @@ campo = [[0,0,0,0,0,0,0,0,0,0],
 minas = []
 safe = []
 uncovered = []
+flagged = []
 range_mode = [(1,2),(0,2),(1,1),(1,0),(0,0),(-1,2)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
 doIt = True
@@ -42,7 +43,7 @@ def setup():
     casas = 0
     num_bombs = random.randrange(10,30) # ecolha aleatória do numero de bombas
     
-    while casas != num_bombs: 
+    while casas != 1: 
         
         mX = random.randrange(10) # escolha do X
         mY = random.randrange(10) # escolha do Y
@@ -205,6 +206,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -229,6 +233,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -253,6 +260,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -277,6 +287,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -301,6 +314,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -325,6 +341,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -349,6 +368,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -374,6 +396,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -399,6 +424,9 @@ def empty_spaces(indX,indY,count):
                 if (indXb,indYb) not in uncovered:
                     
                     uncovered.append((indXb,indY))
+                if(indX,indY) in flagged:
+        
+                    flagged.remove((indX,indY))
                     
                 indXb -= 1
                 print("DONE A")
@@ -501,6 +529,10 @@ def draw_flag(x,y,color):
     strokeWeight(2)
     rect(17,15,5,30)
     triangle(17,10,17,30,37,20)
+    
+    if (x/50,y/50) not in flagged:
+        
+        flagged.append((x/50,y/50))
 
 def draw_numbers(indX,indY,count):
     
@@ -514,6 +546,10 @@ def draw_numbers(indX,indY,count):
         pass
     else:
         text(str(count),20 + (indX * 50),20 + (indY * 50))
+    
+    if(indX,indY) in flagged:
+        
+        flagged.remove((indX,indY))
     
     if (indX,indY) not in uncovered:
         
@@ -576,7 +612,7 @@ def draw():
         
         draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
     
-    if len(uncovered) == len(safe):
+    if uncovered == safe or flagged == minas:
         
         game_win()
 
