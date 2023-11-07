@@ -43,7 +43,7 @@ def setup():
     casas = 0
     num_bombs = random.randrange(10,30) # ecolha aleatória do numero de bombas
     
-    while casas != 1: 
+    while casas != num_bombs: 
         
         mX = random.randrange(10) # escolha do X
         mY = random.randrange(10) # escolha do Y
