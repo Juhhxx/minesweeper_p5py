@@ -45,7 +45,7 @@ def setup():
     #     mX = random.randrange(10)
     #     mY = random.randrange(10)
        
-    #     minas.append((mX,mY)) # inserção na lista "minas"
+    #     minas.add((mX,mY)) # inserção na lista "minas"
     
     casas = 0
     num_bombs = random.randrange(10,30) # ecolha aleatória do numero de bombas
@@ -59,7 +59,7 @@ def setup():
             pass
         else:
             
-            minas.append((mX,mY)) # inserção na lista "minas"
+            minas.add((mX,mY)) # inserção na lista "minas"
             casas += 1 # diz quantas bombas ja foram colocadas 
         
     for y in range (len(campo)): # verificação das casas seguras
@@ -68,7 +68,7 @@ def setup():
             
             if (x,y) not in minas:
             
-                safe.append((x,y)) # inserção na lista "safe"
+                safe.add((x,y)) # inserção na lista "safe"
             
     for mina in minas: # atualização do campo de jogo
         
@@ -210,12 +210,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -237,12 +235,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -264,12 +260,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -291,12 +285,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -318,12 +310,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -345,12 +335,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -372,12 +360,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -400,12 +386,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -428,12 +412,10 @@ def empty_spaces(indX,indY,count):
                 draw_numbers(indXb,indYb,count)
                 
                 
-                if (indXb,indYb) not in uncovered:
-                    
-                    uncovered.append((indXb,indY))
-                if(indX,indY) in flagged:
+                uncovered.add((indXb,indYb))
+                if(indXb,indYb) in flagged:
         
-                    flagged.remove((indX,indY))
+                    flagged.remove((indXb,indYb))
                     
                 indXb -= 1
                 print("DONE A")
@@ -539,7 +521,7 @@ def draw_flag(x,y,color):
     
     if (x/50,y/50) not in flagged:
         
-        flagged.append((x/50,y/50))
+        flagged.add((x/50,y/50))
 
 def draw_numbers(indX,indY,count):
     
@@ -560,7 +542,7 @@ def draw_numbers(indX,indY,count):
     
     if (indX,indY) not in uncovered:
         
-        uncovered.append((indX,indY))
+        uncovered.add((indX,indY))
 
 def draw():
     
