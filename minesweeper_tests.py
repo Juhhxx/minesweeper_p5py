@@ -4,7 +4,7 @@ import time
 
 white = [255,255,255]
 lgray = [150,150,150]
-gray = [100,100,100]
+dgray = [100,100,100]
 black = [0,0,0]
 blue = [0,0,255]
 green = [0,255,0]
@@ -569,7 +569,7 @@ def draw():
             
             for i in range (10):
                 
-                custom_rec(50 * i,50 * i,50,50,True,gray,0,black)
+                custom_rec(50 * i,50 * i,50,50,True,dgray,0,black)
                 
             translate(0,100)
         translate(0,-(2*500))
