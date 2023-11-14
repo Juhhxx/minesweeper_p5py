@@ -28,7 +28,7 @@ uncovered = set()
 flagged = set()
 range_mode = [(1,2),(0,2),(1,1)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
-doIt = True
+DrawBoard = True
 game_on = True
 
 def setup():
@@ -180,6 +180,7 @@ def isBomb(indX,indY):
             
         else: # if it isn't a safe space
             
+            game_on = False
             game_over() # if it wasn't, game over
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
@@ -241,10 +242,8 @@ def empty_spaces(indX,indY):
         empty_spaces_modes(indX,indY,0,-1,2,2)
                 
 def game_over():
-    global game_on,face
-
-    game_on = False
-
+    global face
+    
     for mine in minas:
             
             cX,cY = mine
@@ -258,11 +257,17 @@ def game_over():
             custom_ln(15,35,35,15,5,ddgray)
             custom_cr(25,25,20,True,ddgray,2,black)
             pop()
-            
     for space in safe:
         
         x,y = space
-        isBomb(x,y)
+        count = campo[y][x]
+        push()
+        translate(x*50,y*50)
+        custom_rec(0,0,50,50,True,gray,1,black)
+        pop()
+        draw_numbers(x,y,count)
+        print(space)
+    print("Spaces DONE")
     
     face = ":("
     push()
@@ -361,7 +366,7 @@ def draw_numbers(indX,indY,count):
 # draw game
 def draw():
     
-    global doIt,count,game_on,bombs,start_time,face,elapsed_time
+    global DrawBoard,count,game_on,bombs,start_time,face,elapsed_time
 
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
@@ -378,7 +383,7 @@ def draw():
         game_win()
     
     # draw game board
-    while doIt:
+    while DrawBoard:
         push()
         for i in range (11):
             push()
@@ -400,7 +405,7 @@ def draw():
                 custom_rec(50 * i,0,50,50,False,lgray,1,black)
             translate(0,50)
             
-        doIt = False
+        DrawBoard = False
     
     if game_on:
 
@@ -417,9 +422,6 @@ def draw():
             
             game_win()
             #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-    else:
-        pass
-        #print("GAME IS OFF")
     
 
 run()

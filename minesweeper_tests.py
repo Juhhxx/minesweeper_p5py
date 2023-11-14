@@ -32,7 +32,7 @@ uncovered = []
 flagged = []
 range_mode = [(1,2),(0,2),(1,1),(1,0),(0,0),(-1,2)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
-doIt = True
+DrawBoard = True
 game_on = True
 
 def setup():
@@ -546,7 +546,7 @@ def draw_numbers(indX,indY,count):
 
 def draw():
     
-    global doIt,count,game_on,bombs,start_time,face,elapsed_time
+    global DrawBoard,count,game_on,bombs,start_time,face,elapsed_time
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
     UI()
@@ -561,7 +561,7 @@ def draw():
         
         game_win()
     
-    while doIt:
+    while DrawBoard:
         
         push()
         translate(0,-500)
@@ -590,7 +590,7 @@ def draw():
                 custom_rec(50 * i,0,50,50,False,lgray,2,black)
             translate(0,50)
             
-        doIt = False
+        DrawBoard = False
     
     if  mouse_is_pressed and game_on and mouse_button == LEFT:
         
