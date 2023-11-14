@@ -35,16 +35,8 @@ def setup():
     
     global bombs,start_time,face
     size(500,600)
-    
-    rng_max = 8 # sets range minimum
-    rng_min = 1 # sets range maximun
-    num_bombs = random.randrange(rng_min,rng_max) # chooses the number of bombs randomly (from a set range)
-    # range is multiplied by 5, making it only varying from multiples of 5
-    while len(minas) != num_bombs*5: 
-        
-        mX = random.randrange(10) # choosing the X value
-        mY = random.randrange(10) # choosing the Y value
-        minas.add((mX,mY)) # insertion in the "mines" set
+
+    setBombSpaces(1,6) # set minimum and maximum range of bombs (numbers are multiplied by 5)
             
     for y in range (len(campo)): # checking all Y values (lines)
         
@@ -59,11 +51,6 @@ def setup():
         cX,cY = mina # taking the coordiantes from the tuples (x,y) inside the "mines" set
         
         campo[cY][cX] = "bomb" # writting 'bomb' in each of those coordinates
-    
-    bombs = 0 # reseting bombs to 0
-    for line in campo: # going through each line in the game board
-        
-        bombs += line.count("bomb") # counting all bombs in each line and adding them up
         
     for space in safe:
         
@@ -103,7 +90,6 @@ def setup():
         campo[indY][indX] = count # insert the count value in the correct space in the game board
     
     # control prints
-    print(bombs,"\n")
     print(minas,"\n")
     print(safe,"\n")
     for line in campo:
@@ -113,8 +99,18 @@ def setup():
     start_time = time.time()
     face = ":)"
     
-
 # functions that run the game
+
+def setBombSpaces(rng_min,rng_max):
+
+    rng_max += 1 # max is exclusive, so it adds 1
+    num_bombs = random.randrange(rng_min,rng_max) # chooses the number of bombs randomly (from a set range)
+    # range is multiplied by 5, making it only varying from multiples of 5
+    while len(minas) != num_bombs*5: 
+        
+        mX = random.randrange(10) # choosing the X value
+        mY = random.randrange(10) # choosing the Y value
+        minas.add((mX,mY)) # insertion in the "mines" set
     
 def check_line_abv(count,indX,indY,mode):
     
@@ -170,7 +166,7 @@ def isBomb(indX,indY):
 
         count = int(campo[indY][indX]) # check count value in the specefied space
             
-        if count == 0 and game_on: # check if count is 0
+        if count == 0: # check if count is 0
         
             empty_spaces(indX,indY) # if it is, do the special function
         else:
@@ -247,19 +243,21 @@ def empty_spaces(indX,indY):
 def game_over():
     global game_on,face
 
-    # for mine in minas:
-            
-    #         cX,cY = mine
-    #         custom_rec(cX*50,cY*50,50,50,True,lgray,2,black)
-    #         fill(255,0,0)
-    #         strokeWeight(1)
-    #         circle(25 + (cX * 50),25 + (cY * 50),40)
-            
-    # for space in safe:
-        
-    #     x,y = space
-    #     isBomb(x,y)
     game_on = False
+
+    for mine in minas:
+            
+            cX,cY = mine
+            custom_rec(cX*50,cY*50,50,50,True,lgray,2,black)
+            fill(255,0,0)
+            strokeWeight(1)
+            circle(25 + (cX * 50),25 + (cY * 50),40)
+            
+    for space in safe:
+        
+        x,y = space
+        isBomb(x,y)
+    
     face = ":("
     push()
     scale(4)
@@ -286,7 +284,7 @@ def UI():
     
     bombs = len(minas) - len(flagged)
     push()
-    custom_rec(0,501,500,100,True,lgray,2,black)
+    custom_rec(0,501,500,100,True,gray,2,black)
     fill(0)
     strokeWeight(0)
     scale(2)
@@ -307,7 +305,7 @@ def UI():
     text(str(face),0,0)
     pop()               
          
-# funções para definir formas
+# drawing functions
                 
 def draw_flag(x,y,color):
     
