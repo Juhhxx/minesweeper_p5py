@@ -98,7 +98,7 @@ def setup():
     # starting game time and setting the face to :)
     start_time = time.time()
     face = ":)"
-    
+    # set font
     font = create_font("joystix.monospace-regular.otf",15)
     text_font(font)
     
@@ -181,7 +181,6 @@ def isBomb(indX,indY):
         else: # if it isn't a safe space
             
             game_over() # if it wasn't, game over
-
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
@@ -318,28 +317,29 @@ def UI():
                 
 def draw_flag(x,y,color):
     
-    if (x/50,y/50) not in flagged:
-        push()
-        translate(x,y)
-        #custom_rec(0,0,50,50,True,lgray,2,black)
-        r,g,b = color
-        fill(r,g,b)
-        stroke(0)
-        strokeWeight(2)
-        rect(17,15,5,30)
-        triangle(17,10,17,30,37,20)
-        pop()
+    if (x/50,y/50) not in uncovered:
+        if (x/50,y/50) not in flagged:
+            push()
+            translate(x,y)
+            #custom_rec(0,0,50,50,True,lgray,2,black)
+            r,g,b = color
+            fill(r,g,b)
+            stroke(0)
+            strokeWeight(2)
+            rect(17,15,5,30)
+            triangle(17,10,17,30,37,20)
+            pop()
 
-        flagged.add((int(x/50),int(y/50)))
-    else:
-        push()
-        translate(x,y)
-        custom_tr(0,0,50,0,0,50,True,lgray,0,black)
-        custom_tr(50,0,50,50,0,50,True,dgray,0,black)
-        custom_rec(8,8,34,34,True,gray,0,black)
-        custom_rec(0,0,50,50,False,black,1,black)
-        pop()        
-        flagged.remove((int(x/50),int(y/50)))
+            flagged.add((int(x/50),int(y/50)))
+        else:
+            push()
+            translate(x,y)
+            custom_tr(0,0,50,0,0,50,True,lgray,0,black)
+            custom_tr(50,0,50,50,0,50,True,dgray,0,black)
+            custom_rec(8,8,34,34,True,gray,0,black)
+            custom_rec(0,0,50,50,False,black,1,black)
+            pop()        
+            flagged.remove((int(x/50),int(y/50)))
 
 def draw_numbers(indX,indY,count):
     
@@ -418,7 +418,7 @@ def draw():
             game_win()
             #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     else:
-
+        pass
         #print("GAME IS OFF")
     
 
