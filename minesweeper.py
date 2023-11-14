@@ -99,6 +99,9 @@ def setup():
     start_time = time.time()
     face = ":)"
     
+    font = create_font("joystix.monospace-regular.otf",15)
+    text_font(font)
+    
 # functions that run the game
 
 def setBombSpaces(rng_min,rng_max):
@@ -158,29 +161,27 @@ def isBomb(indX,indY):
     
     global safe,count,game_on
 
-    if (indX,indY) in safe: # check if the space that was selected was a safe space
+    if (indX,indY) not in flagged:
+        
+        if (indX,indY) in safe: # check if the space that was selected was a safe space
 
-        # control prints
-        print("IndY:",indY)
-        print("IndX:",indX)
+            # control prints
+            #print("IndY:",indY)
+            #print("IndX:",indX)
 
-        count = int(campo[indY][indX]) # check count value in the specefied space
+            count = int(campo[indY][indX]) # check count value in the specefied space
+                
+            if count == 0: # check if count is 0
             
-        if count == 0: # check if count is 0
-        
-            empty_spaces(indX,indY) # if it is, do the special function
-        else:
+                empty_spaces(indX,indY) # if it is, do the special function
+            else:
 
-            draw_numbers(indX,indY,count) # if not, draw the specefied count value
-          
-    else: # if it isn't a safe space
-        
-        if (indX,indY) not in flagged: # check if the space was not flagged
+                draw_numbers(indX,indY,count) # if not, draw the specefied count value
+            
+        else: # if it isn't a safe space
             
             game_over() # if it wasn't, game over
-        
-        
-    return indX,indY,count
+
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
@@ -248,10 +249,16 @@ def game_over():
     for mine in minas:
             
             cX,cY = mine
-            custom_rec(cX*50,cY*50,50,50,True,lgray,2,black)
-            fill(255,0,0)
-            strokeWeight(1)
-            circle(25 + (cX * 50),25 + (cY * 50),40)
+            push()
+            translate(cX*50,cY*50)
+            custom_rec(0,0,50,50,True,gray,1,black)
+            strokeCap(ROUND)
+            custom_ln(25,10,25,40,4,ddgray)
+            custom_ln(10,25,40,25,4,ddgray)
+            custom_ln(15,15,35,35,5,ddgray)
+            custom_ln(15,35,35,15,5,ddgray)
+            custom_cr(25,25,20,True,ddgray,2,black)
+            pop()
             
     for space in safe:
         
@@ -260,10 +267,10 @@ def game_over():
     
     face = ":("
     push()
-    scale(4)
     strokeWeight(5)
-    translate(35,50)
+    translate(140,230)
     fill(255,0,0)
+    scale(2)
     text("GAME OVER",0,0)
     pop()
 
@@ -272,11 +279,13 @@ def game_win():
 
     game_on = False
     face = "B)"
-    scale(4)
+    push()
     strokeWeight(5)
-    translate(35,50)
+    translate(140,230)
     fill(0,255,0)
+    scale(2)
     text("YOU WIN!!",0,0)
+    pop()
        
 def UI():
     
@@ -286,22 +295,22 @@ def UI():
     push()
     custom_rec(0,501,500,100,True,gray,2,black)
     fill(0)
-    strokeWeight(0)
-    scale(2)
-    translate(10,260)
-    text("BOMBS:",0,0)
-    translate(0,10)
+    strokeWeight(5)
+    stroke(255,255,255)
+    translate(20,530)
+    text("BOMBS :",0,0)
+    translate(0,20)
     text(str(bombs),0,0)
-    translate(200,0)
+    translate(380,0)
     text(str(elapsed_time),0,0)
-    translate(0,-10)
-    text("TIME:",0,0)
+    translate(0,-20)
+    text("TIME :",0,0)
     pop()
     push()
     noStroke()
-    translate(240,520)
+    translate(240,540)
     fill(0)
-    scale(4)
+    scale(1.5)
     text(str(face),0,0)
     pop()               
          
@@ -309,17 +318,28 @@ def UI():
                 
 def draw_flag(x,y,color):
     
-    
-    translate(x,y)
-    #custom_rec(0,0,50,50,True,lgray,2,black)
-    r,g,b = color
-    fill(r,g,b)
-    stroke(0)
-    strokeWeight(2)
-    rect(17,15,5,30)
-    triangle(17,10,17,30,37,20)
-    
-    flagged.add((int(x/50),int(y/50)))
+    if (x/50,y/50) not in flagged:
+        push()
+        translate(x,y)
+        #custom_rec(0,0,50,50,True,lgray,2,black)
+        r,g,b = color
+        fill(r,g,b)
+        stroke(0)
+        strokeWeight(2)
+        rect(17,15,5,30)
+        triangle(17,10,17,30,37,20)
+        pop()
+
+        flagged.add((int(x/50),int(y/50)))
+    else:
+        push()
+        translate(x,y)
+        custom_tr(0,0,50,0,0,50,True,lgray,0,black)
+        custom_tr(50,0,50,50,0,50,True,dgray,0,black)
+        custom_rec(8,8,34,34,True,gray,0,black)
+        custom_rec(0,0,50,50,False,black,1,black)
+        pop()        
+        flagged.remove((int(x/50),int(y/50)))
 
 def draw_numbers(indX,indY,count):
     
@@ -327,19 +347,16 @@ def draw_numbers(indX,indY,count):
     
     if count == 0:
         
-        custom_rec(int(indX)*50,int(indY)*50,50,50,True,lgray,2,black)
+        custom_rec(int(indX)*50,int(indY)*50,50,50,True,gray,1,black)
     else:
         
-        custom_rec(int(indX)*50,int(indY)*50,50,50,True,lgray,2,black)
+        custom_rec(int(indX)*50,int(indY)*50,50,50,True,gray,1,black)
         fill(r,g,b)
-        strokeWeight(3)
-        text(str(count),20 + (indX * 50),20 + (indY * 50))
+        strokeWeight(2)
+        stroke(0,0,0)
+        text(str(count),15 + (indX * 50),15 + (indY * 50))
 
     uncovered.add((indX,indY))
-    
-    if (indX,indY) in flagged and not minas:
-        
-        flagged.remove((indX,indY))
 
 # draw game
 def draw():
@@ -399,10 +416,10 @@ def draw():
         if uncovered == safe or flagged == minas:
             
             game_win()
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     else:
 
-        print("GAME IS OFF")
+        #print("GAME IS OFF")
     
 
 run()
