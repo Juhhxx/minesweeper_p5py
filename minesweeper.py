@@ -3,11 +3,6 @@ from myColorsShapes import *
 import random
 import time
 
-
-# PENDENT PROBLEMS : when u flag a 0 space it doesn't allow you to remove the flag and when 
-# you flag a number it doesn't reset the bombs score, when you lose you still see the "Game Win" 
-# for some reason. I WANT TO KILL MYSELF AHHHHHHHHHHHHHHHH
-
 # game board 
 campo = [[0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0],
@@ -31,6 +26,26 @@ number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
 DrawBoard = True
 game_on = True
 last_button_pressed = None
+
+def restart_game():
+    global campo, game_on, minas, safe, uncovered, flagged, DrawBoard
+    campo = [[0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0]]
+    DrawBoard = True
+    minas = set()
+    safe  = set()
+    uncovered = set()
+    flagged = set()
+    setup()
+    game_on = True
 
 def setup():
     
@@ -179,7 +194,7 @@ def isBomb(indX,indY):
 
                 draw_numbers(indX,indY,count) # if not, draw the specefied count value
             
-        else: # if it isn't a safe space
+        elif (indX,indY) in minas: # if it isn't a safe space
             
             game_on = False
             game_over() # if it wasn't, game over
@@ -194,10 +209,16 @@ def mouse_released():
 
     if game_on:
         if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
-            isBomb(int(mouse_x/50),int(mouse_y/50))
+                isBomb(int(mouse_x/50),int(mouse_y/50))
 
         if last_button_pressed == "MouseButton(RIGHT)" or last_button_pressed == "MouseButton(RIGHT,RIGHT)":
             draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
+    
+    if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
+            
+            if mouse_x >= 217 and mouse_x <= 282 and mouse_y >= 517 and mouse_y <= 582:
+
+                restart_game()
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
@@ -308,16 +329,21 @@ def game_win():
     pop()
        
 def UI():
-    
     global bombs,elapsed_time
     
     bombs = len(minas) - len(flagged)
     push()
-    custom_rec(0,501,500,100,True,gray,2,black)
+    translate(0,501)
+    custom_rec(0,0,500,100,True,gray,2,black)
+    custom_rec(10,10,480,80,True,dgray,0,black)
+    custom_rec(15,15,475,75,True,lgray,0,black)
+    custom_tr(10,90,20,90,20,80,True,lgray,0,black)
+    custom_tr(490,10,480,20,490,20,True,lgray,0,black)
+    custom_rec(15,15,470,70,True,gray,0,black)
     fill(0)
     strokeWeight(5)
     stroke(255,255,255)
-    translate(20,530)
+    translate(20,25)
     text("BOMBS :",0,0)
     translate(0,20)
     text(str(bombs),0,0)
@@ -328,10 +354,9 @@ def UI():
     pop()
     push()
     noStroke()
-    translate(240,540)
+    translate(217,517)
     fill(0)
-    scale(1.5)
-    text(str(face),0,0)
+    draw_face(face)
     pop()               
          
 # drawing functions
@@ -381,6 +406,45 @@ def draw_numbers(indX,indY,count):
 
     uncovered.add((indX,indY))
 
+def draw_face(face):
+
+    push()
+    custom_tr(0,0,66,0,0,66,True,lgray,0,black)
+    custom_tr(66,0,66,66,0,66,True,dgray,0,black)
+    custom_rec(8,8,50,50,True,gray,0,black)
+    custom_rec(0,0,66,66,False,black,2,black)
+    pop()
+    
+    if face == ":)":
+        push()
+        translate(8,8)
+        custom_cr(25,25,40,True,yellow,4,black)
+        custom_cr(17,20,6,True,black,0,black)
+        custom_cr(33,20,6,True,black,0,black)
+        custom_arc(25,30,20,10,(0,180),False,black,4,black)
+        pop()
+    elif face == ":(":
+        push()
+        translate(8,8)
+        custom_cr(25,25,40,True,yellow,4,black)
+        custom_arc(25,35,20,10,(180,360),False,black,4,black)
+        custom_ln(12,15,22,25,3,black)
+        custom_ln(12,25,22,15,3,black)
+        translate(15,0)
+        custom_ln(12,15,22,25,3,black)
+        custom_ln(12,25,22,15,3,black)
+        pop()
+    elif face == "B)":
+        push()
+        translate(8,8)
+        custom_cr(25,25,40,True,yellow,4,black)
+        custom_arc(25,30,20,10,(0,180),False,black,4,black)
+        translate(25,13)
+        custom_arc(-9,0,20,25,(0,180),True,black,2,black)
+        custom_arc(9,0,20,25,(0,180),True,black,2,black)
+        custom_ln(12,0,5,12,2,white)
+        custom_ln(-5,0,-12,12,2,white)
+        pop()
 # draw game
 def draw():
     
@@ -392,6 +456,10 @@ def draw():
     check_button()
 
     # cheat codes
+
+    if key == "r":
+
+        restart_game()
     
     if key == "ENTER":
         
@@ -404,9 +472,9 @@ def draw():
     # draw game board
     while DrawBoard:
         push()
-        for i in range (11):
+        for i in range (10):
             push()
-            for i in range (11):
+            for i in range (10):
                 push()
                 custom_tr(0,0,50,0,0,50,True,lgray,0,black)
                 custom_tr(50,0,50,50,0,50,True,dgray,0,black)
@@ -426,6 +494,7 @@ def draw():
             
         DrawBoard = False
     
+
     if game_on:
         
         if uncovered == safe or flagged == minas:
