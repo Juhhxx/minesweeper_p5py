@@ -30,6 +30,7 @@ range_mode = [(1,2),(0,2),(1,1)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
 DrawBoard = True
 game_on = True
+last_button_pressed = None
 
 def setup():
     
@@ -183,6 +184,21 @@ def isBomb(indX,indY):
             game_on = False
             game_over() # if it wasn't, game over
 
+def check_button():
+    global last_button_pressed
+    if mouse_is_pressed:
+        last_button_pressed = str(mouse_button)
+
+def mouse_released():
+    global last_button_pressed,game_on
+
+    if game_on:
+        if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
+            isBomb(int(mouse_x/50),int(mouse_y/50))
+
+        if last_button_pressed == "MouseButton(RIGHT)" or last_button_pressed == "MouseButton(RIGHT,RIGHT)":
+            draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
+
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
      
@@ -321,21 +337,23 @@ def UI():
 # drawing functions
                 
 def draw_flag(x,y,color):
-    
+    global bombs
+        
     if (x/50,y/50) not in uncovered:
         if (x/50,y/50) not in flagged:
-            push()
-            translate(x,y)
-            #custom_rec(0,0,50,50,True,lgray,2,black)
-            r,g,b = color
-            fill(r,g,b)
-            stroke(0)
-            strokeWeight(2)
-            rect(17,15,5,30)
-            triangle(17,10,17,30,37,20)
-            pop()
-
-            flagged.add((int(x/50),int(y/50)))
+            if bombs > 0:
+                push()
+                translate(x,y)
+                #custom_rec(0,0,50,50,True,lgray,2,black)
+                translate(15,11)
+                r,g,b = color
+                fill(r,g,b)
+                stroke(0)
+                strokeWeight(2)
+                rect(0,5,4,25)
+                triangle(0,0,0,20,20,10)
+                pop()
+                flagged.add((int(x/50),int(y/50)))
         else:
             push()
             translate(x,y)
@@ -371,6 +389,7 @@ def draw():
     end_time = time.time()
     elapsed_time = int(end_time - start_time)
     UI()
+    check_button()
 
     # cheat codes
     
@@ -408,15 +427,6 @@ def draw():
         DrawBoard = False
     
     if game_on:
-
-        if  mouse_is_pressed and mouse_button == LEFT:
-            
-            isBomb(int(mouse_x/50),int(mouse_y/50))
-            
-            
-        if  mouse_is_pressed and mouse_button == RIGHT:
-            
-            draw_flag(int(mouse_x/50)*50,int(mouse_y/50)*50,red)
         
         if uncovered == safe or flagged == minas:
             
