@@ -222,7 +222,8 @@ def mouse_released():
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
-     
+    # count = 0
+    # while count == 0:
     indYb = indY + mY # goes to the next line (Y value)
     for i in range (rng1): # this loop controls the current line where to look for adjacent spaces
         
@@ -231,17 +232,16 @@ def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2):
         for i in range (rng2): # this loop controls the adjacent spaces 
             
             count = int(campo[indYb][indXb]) 
-            # if count == 0:
-            #     fill(255,0,0)
-            #     rect(indXb*50,indYb*50,10,10)
-            #     adj_mines(indXb,indYb)
             
             if (indXb,indYb) not in uncovered:
                 draw_numbers(indXb,indYb,count)
+                
+                if count == 0:
+                    empty_spaces(indXb,indYb)
             
             uncovered.add((indXb,indYb))
             if(indXb,indYb) in flagged:
-    
+
                 flagged.remove((indXb,indYb))
                 
             indXb -= 1
@@ -283,28 +283,17 @@ def game_over():
     
     for mine in minas:
             
-            cX,cY = mine
-            push()
-            translate(cX*50,cY*50)
-            custom_rec(0,0,50,50,True,gray,1,black)
-            strokeCap(ROUND)
-            custom_ln(25,10,25,40,4,ddgray)
-            custom_ln(10,25,40,25,4,ddgray)
-            custom_ln(15,15,35,35,5,ddgray)
-            custom_ln(15,35,35,15,5,ddgray)
-            custom_cr(25,25,20,True,ddgray,2,black)
-            pop()
-    for space in safe:
-        
-        x,y = space
-        count = campo[y][x]
+        cX,cY = mine
         push()
-        translate(x*50,y*50)
+        translate(cX*50,cY*50)
         custom_rec(0,0,50,50,True,gray,1,black)
+        strokeCap(ROUND)
+        custom_ln(25,10,25,40,4,ddgray)
+        custom_ln(10,25,40,25,4,ddgray)
+        custom_ln(15,15,35,35,5,ddgray)
+        custom_ln(15,35,35,15,5,ddgray)
+        custom_cr(25,25,20,True,ddgray,2,black)
         pop()
-        draw_numbers(x,y,count)
-        print(space)
-    print("Spaces DONE")
     
     face = ":("
     push()
@@ -445,6 +434,7 @@ def draw_face(face):
         custom_ln(12,0,5,12,2,white)
         custom_ln(-5,0,-12,12,2,white)
         pop()
+        
 # draw game
 def draw():
     
