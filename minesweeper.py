@@ -191,14 +191,116 @@ def isBomb(indX,indY):
             
                 empty_spaces(indX,indY) # if it is, do the special function
             else:
+                
+                isChord = check_chord(indX,indY)
 
-                draw_numbers(indX,indY,count) # if not, draw the specefied count value
+                if not isChord: draw_numbers(indX,indY,count) # if not, draw the specefied count value
             
         elif (indX,indY) in minas: # if it isn't a safe space
             
             game_on = False
             game_over() # if it wasn't, game over
 
+def check_chord_modes(indX,indY,mX,mY,rng1,rng2,count):
+
+    flag_count = 0
+    wrong_flag = []
+    chord = []
+    indYb = indY + mY # goes to the next line (Y value)
+    for i in range (rng1): # this loop controls the current line where to look for adjacent spaces
+        
+        indXb = indX + mX # goes to the next space (X value)
+        
+        for i in range (rng2): # this loop controls the adjacent spaces 
+            
+            if (indXb,indYb) in flagged:
+                
+                flag_count += 1
+                if (indXb,indYb) in safe: wrong_flag.append((indXb,indYb))
+
+            elif (indXb,indYb) not in uncovered:
+                chord.append((indXb,indYb))
+
+            indXb -= 1
+            
+        indYb += 1
+    
+    if flag_count == count:
+        
+        return True,chord,wrong_flag
+    else:
+        
+        return False,chord,wrong_flag
+
+def check_chord(indX,indY):
+
+    count = campo[indY][indX]
+
+    if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+            
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,3,3,count)
+    elif indY == 0 and indX > 0 and indX < 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,0,2,3,count)
+    elif indY == 9 and indX > 0 and indX < 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,2,3,count)
+    elif indX == 0 and indY > 0 and indY < 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,3,2,count)
+    elif indX == 9 and indY > 0 and indY < 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,-1,3,2,count)
+    elif indX == 0 and indY == 0:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,0,2,2,count)
+    elif indX == 9 and indY == 0:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,0,2,2,count)
+    elif indX == 0 and indY == 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,2,2,count)
+    elif indX == 9 and indY == 9:
+        
+        isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,-1,2,2,count)
+
+    if isChord:
+
+        chord(chords,wrong_flags)
+        return True
+    else:
+        return False
+
+def chord(chord,wrong_flags):
+
+    for space in chord:
+
+        indX, indY = space
+        count = campo[indY][indX]
+
+        if (indX,indY) in safe:
+            draw_numbers(indX,indY,count)
+            
+            if count == 0:
+                empty_spaces(indX,indY)
+                
+            uncovered.add((indX,indY))
+
+        elif (indX,indY) in minas:
+            game_over()
+            for flag in wrong_flags:
+                x,y = flag
+                push()
+                translate(x*50,y*50)
+                custom_rec(8,8,34,34,True,lred,0,black)
+                translate(15,11)
+                fill(255,0,0)
+                stroke(0)
+                strokeWeight(2)
+                rect(0,5,4,25)
+                triangle(0,0,0,20,20,10)
+                pop()
+                
 def check_button():
     global last_button_pressed
     if mouse_is_pressed:
@@ -222,8 +324,7 @@ def mouse_released():
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
-    # count = 0
-    # while count == 0:
+
     indYb = indY + mY # goes to the next line (Y value)
     for i in range (rng1): # this loop controls the current line where to look for adjacent spaces
         
