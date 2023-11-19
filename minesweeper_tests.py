@@ -497,7 +497,7 @@ def draw():
 
     if game_on:
         
-        if uncovered == safe or flagged == minas:
+        if uncovered == safe:
             
             game_win()
             #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")

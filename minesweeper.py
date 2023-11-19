@@ -1,8 +1,9 @@
 from p5 import *
 from myColorsShapes import *
-import random
-import time
+import random, time, sys, os
+import vispy.app.backends._glfw 
 
+application_path = os.path.dirname(sys.executable)
 # game board 
 campo = [[0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0],
@@ -588,7 +589,7 @@ def draw():
 
     if game_on:
         
-        if uncovered == safe or flagged == minas:
+        if uncovered == safe:
             
             game_win()
             #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
