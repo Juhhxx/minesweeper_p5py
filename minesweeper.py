@@ -58,6 +58,7 @@ def setup():
     
     global bombs,start_time,face
     size(width,height)
+    title("minesweeper p5")
 
     setBombSpaces(1,6) # set minimum and maximum range of bombs (numbers are multiplied by 5)
             
