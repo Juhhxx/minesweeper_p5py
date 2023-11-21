@@ -28,30 +28,36 @@ DrawBoard = True
 game_on = True
 last_button_pressed = None
 
+width = len(campo[0]) * 50
+height = (len(campo)* 50) + 100
+
+
 def restart_game():
-    global campo, game_on, minas, safe, uncovered, flagged, DrawBoard
+    global campo, game_on, minas, safe, uncovered, flagged, DrawBoard, height, width
     campo = [[0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0]]
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0]]
     DrawBoard = True
     minas = set()
     safe  = set()
     uncovered = set()
     flagged = set()
+    width = len(campo[0]) * 50
+    height = (len(campo)* 50) + 100
     setup()
     game_on = True
 
 def setup():
     
     global bombs,start_time,face
-    size(500,600)
+    size(width,height)
 
     setBombSpaces(1,6) # set minimum and maximum range of bombs (numbers are multiplied by 5)
             
@@ -76,31 +82,31 @@ def setup():
 
         # seeing how many bombs are directly adjacent to each space that's in the "safe" set
 
-        if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+        if indX > 0 and indY > 0 and indX < (len(campo[0]) - 1) and indY < (len(campo) - 1):    
             
             count = check_line_abv(count,indX,indY,0) + check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-        elif indY == 0 and indX > 0 and indX < 9:
+        elif indY == 0 and indX > 0 and indX < (len(campo[0]) - 1):
             
             count = check_line(count,indX,indY,0) + check_line_blw(count,indX,indY,0)
-        elif indY == 9 and indX > 0 and indX < 9:
+        elif indY == (len(campo) - 1) and indX > 0 and indX < (len(campo[0]) - 1):
             
             count = check_line(count,indX,indY,0) + check_line_abv(count,indX,indY,0)
-        elif indX == 0 and indY > 0 and indY < 9:
+        elif indX == 0 and indY > 0 and indY < (len(campo) - 1):
             
             count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-        elif indX == 9 and indY > 0 and indY < 9:
+        elif indX == (len(campo[0]) - 1) and indY > 0 and indY < (len(campo) - 1):
             
             count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
         elif indX == 0 and indY == 0:
             
             count = check_line(count,indX,indY,1) + check_line_blw(count,indX,indY,1)
-        elif indX == 9 and indY == 0:
+        elif indX == (len(campo[0]) - 1) and indY == 0:
             
             count = check_line(count,indX,indY,2) + check_line_blw(count,indX,indY,2)
-        elif indX == 0 and indY == 9:
+        elif indX == 0 and indY == (len(campo) - 1):
             
             count = check_line_abv(count,indX,indY,1) + check_line(count,indX,indY,1)
-        elif indX == 9 and indY == 9:
+        elif indX == (len(campo[0]) - 1) and indY == (len(campo) - 1):
             
             count = check_line_abv(count,indX,indY,2) + check_line(count,indX,indY,2)
             
@@ -128,8 +134,8 @@ def setBombSpaces(rng_min,rng_max):
     # range is multiplied by 5, making it only varying from multiples of 5
     while len(minas) != num_bombs*5: 
         
-        mX = random.randrange(10) # choosing the X value
-        mY = random.randrange(10) # choosing the Y value
+        mX = random.randrange(len(campo[0])) # choosing the X value
+        mY = random.randrange(len(campo)) # choosing the Y value
         minas.add((mX,mY)) # insertion in the "mines" set
     
 def check_line_abv(count,indX,indY,mode):
@@ -237,31 +243,31 @@ def check_chord(indX,indY):
 
     count = campo[indY][indX]
 
-    if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+    if indX > 0 and indY > 0 and indX < (len(campo[0]) - 1) and indY < (len(campo) - 1):    
             
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,3,3,count)
-    elif indY == 0 and indX > 0 and indX < 9:
+    elif indY == 0 and indX > 0 and indX < (len(campo[0]) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,0,2,3,count)
-    elif indY == 9 and indX > 0 and indX < 9:
+    elif indY == (len(campo) - 1) and indX > 0 and indX < (len(campo[0]) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,2,3,count)
-    elif indX == 0 and indY > 0 and indY < 9:
+    elif indX == 0 and indY > 0 and indY < (len(campo) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,3,2,count)
-    elif indX == 9 and indY > 0 and indY < 9:
+    elif indX == (len(campo[0]) - 1) and indY > 0 and indY < (len(campo) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,-1,3,2,count)
     elif indX == 0 and indY == 0:
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,0,2,2,count)
-    elif indX == 9 and indY == 0:
+    elif indX == (len(campo[0]) - 1) and indY == 0:
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,0,2,2,count)
-    elif indX == 0 and indY == 9:
+    elif indX == 0 and indY == (len(campo) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,1,-1,2,2,count)
-    elif indX == 9 and indY == 9:
+    elif indX == (len(campo[0]) - 1) and indY == (len(campo) - 1):
         
         isChord,chords,wrong_flags = check_chord_modes(indX,indY,0,-1,2,2,count)
 
@@ -308,7 +314,7 @@ def check_button():
         last_button_pressed = str(mouse_button)
 
 def mouse_released():
-    global last_button_pressed,game_on
+    global last_button_pressed,game_on, width, height
 
     if game_on:
         if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
@@ -319,7 +325,7 @@ def mouse_released():
     
     if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
             
-            if mouse_x >= 217 and mouse_x <= 282 and mouse_y >= 517 and mouse_y <= 582:
+            if mouse_x >= (width/2 - 33) and mouse_x <= (width/2 + 33) and mouse_y >= 517 and mouse_y <= 582:
 
                 restart_game()
 
@@ -352,36 +358,36 @@ def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2):
 
 def empty_spaces(indX,indY):
         
-    if indX > 0 and indY > 0 and indX < 9 and indY < 9:    
+    if indX > 0 and indY > 0 and indX < (len(campo[0]) - 1) and indY < (len(campo) - 1):    
             
         empty_spaces_modes(indX,indY,1,-1,3,3)
-    elif indY == 0 and indX > 0 and indX < 9:
+    elif indY == 0 and indX > 0 and indX < (len(campo[0]) - 1):
         
         empty_spaces_modes(indX,indY,1,0,2,3)
-    elif indY == 9 and indX > 0 and indX < 9:
+    elif indY == (len(campo) - 1) and indX > 0 and indX < 9:
         
         empty_spaces_modes(indX,indY,1,-1,2,3)
-    elif indX == 0 and indY > 0 and indY < 9:
+    elif indX == 0 and indY > 0 and indY < (len(campo) - 1):
         
         empty_spaces_modes(indX,indY,1,-1,3,2)
-    elif indX == 9 and indY > 0 and indY < 9:
+    elif indX == (len(campo[0]) - 1) and indY > 0 and indY < (len(campo) - 1):
         
         empty_spaces_modes(indX,indY,0,-1,3,2)
     elif indX == 0 and indY == 0:
         
         empty_spaces_modes(indX,indY,1,0,2,2)
-    elif indX == 9 and indY == 0:
+    elif indX == (len(campo[0]) - 1) and indY == 0:
         
         empty_spaces_modes(indX,indY,0,0,2,2)
-    elif indX == 0 and indY == 9:
+    elif indX == 0 and indY == (len(campo) - 1):
         
         empty_spaces_modes(indX,indY,1,-1,2,2)
-    elif indX == 9 and indY == 9:
+    elif indX == (len(campo[0]) - 1) and indY == (len(campo) - 1):
         
         empty_spaces_modes(indX,indY,0,-1,2,2)
                 
 def game_over():
-    global face
+    global face, width, height
     
     for mine in minas:
             
@@ -400,37 +406,37 @@ def game_over():
     face = ":("
     push()
     strokeWeight(5)
-    translate(140,230)
+    translate(width/2 - 125,230)
     fill(255,0,0)
     scale(2)
     text("GAME OVER",0,0)
     pop()
 
 def game_win():
-    global game_on,face
+    global game_on, face, width, height
 
     game_on = False
     face = "B)"
     push()
     strokeWeight(5)
-    translate(140,230)
+    translate(width/2 - 120,230)
     fill(0,255,0)
     scale(2)
     text("YOU WIN!!",0,0)
     pop()
        
 def UI():
-    global bombs,elapsed_time
+    global bombs,elapsed_time,width,height
     
     bombs = len(minas) - len(flagged)
     push()
     translate(0,501)
-    custom_rec(0,0,500,100,True,gray,2,black)
-    custom_rec(10,10,480,80,True,dgray,0,black)
-    custom_rec(15,15,475,75,True,lgray,0,black)
+    custom_rec(0,0,width,100,True,gray,2,black)
+    custom_rec(10,10,width - 20,80,True,dgray,0,black)
+    custom_rec(15,15,width - 25,75,True,lgray,0,black)
     custom_tr(10,90,20,90,20,80,True,lgray,0,black)
-    custom_tr(490,10,480,20,490,20,True,lgray,0,black)
-    custom_rec(15,15,470,70,True,gray,0,black)
+    custom_tr(width - 10,10,width - 20,20,width - 10,20,True,lgray,0,black)
+    custom_rec(15,15,width - 30,70,True,gray,0,black)
     fill(0)
     strokeWeight(5)
     stroke(255,255,255)
@@ -438,14 +444,14 @@ def UI():
     text("BOMBS :",0,0)
     translate(0,20)
     text(str(bombs),0,0)
-    translate(380,0)
+    translate(width - 120,0)
     text(str(elapsed_time),0,0)
     translate(0,-20)
     text("TIME :",0,0)
     pop()
     push()
     noStroke()
-    translate(217,517)
+    translate(width/2 - 33,517)
     fill(0)
     draw_face(face)
     pop()               
@@ -564,9 +570,9 @@ def draw():
     # draw game board
     while DrawBoard:
         push()
-        for i in range (10):
+        for i in range (len(campo)):
             push()
-            for i in range (10):
+            for i in range (len(campo[0])):
                 push()
                 custom_tr(0,0,50,0,0,50,True,lgray,0,black)
                 custom_tr(50,0,50,50,0,50,True,dgray,0,black)
@@ -577,9 +583,9 @@ def draw():
             translate(0,50,0)
         pop()
         
-        for i in range (10):
+        for i in range (len(campo)):
             
-            for i in range (10):
+            for i in range (len(campo[0])):
                 
                 custom_rec(50 * i,0,50,50,False,lgray,1,black)
             translate(0,50)
