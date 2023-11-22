@@ -5,63 +5,136 @@ import vispy.app.backends._glfw
 
 application_path = os.path.dirname(sys.executable)
 # game board 
-campo = [[0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0]]
+# campo = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 # sets for mines, safe spaces, uncovered spaces and flagged spaces, range modes for cheking spaces,
 # number colors, boolean for drawing game board, boolean for running the game itself
-minas = set()
-safe = set()
-uncovered = set()
-flagged = set()
+# minas = set()
+# safe = set()
+# uncovered = set()
+# flagged = set()
 range_mode = [(1,2),(0,2),(1,1)]
 number_colors = [blue,green,red,dblue,dred,aqua,dgreen,black]
-DrawBoard = True
-game_on = True
+# DrawBoard = True
+# game_on = True
 last_button_pressed = None
+dificultyChoosen = False
+loading_game = True
 
-width = len(campo[0]) * 50
-height = (len(campo)* 50) + 100
 
+# width = len(campo[0]) * 50
+# height = (len(campo)* 50) + 100
 
-def restart_game():
-    global campo, game_on, minas, safe, uncovered, flagged, DrawBoard, height, width
-    campo = [[0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0],
-             [0,0,0,0,0,0,0,0,0,0]]
-    DrawBoard = True
+def dificulty_select(dificulty):
+    
+    if dificulty == "easy":
+        
+        #9x9
+        campo = [[0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0]]
+        rng_min = 1
+        rng_max = 2
+    elif dificulty == "intermediate":
+        #16x16
+        campo = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+        rng_min = 5
+        rng_max = 10
+    elif dificulty == "hard":
+        #16x30
+        campo = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+        rng_min = 10
+        rng_max = 20
+    elif dificulty == "expert":
+        #16x30
+        campo = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+        rng_min = 20
+        rng_max = 25
+    
+    return campo,rng_min,rng_max
+        
+def start_game(dificulty):
+    global campo, game_on, minas, safe, uncovered, flagged, DrawBoard, height, width, start_time,face
+    
+    campo, min_bombs, max_bombs = dificulty_select(dificulty)
+    
+    width = len(campo[0]) * 50
+    height = (len(campo)* 50) + 100
+    size(width,height)
+    
     minas = set()
     safe  = set()
     uncovered = set()
     flagged = set()
-    width = len(campo[0]) * 50
-    height = (len(campo)* 50) + 100
-    setup()
-    game_on = True
-
-def setup():
     
-    global bombs,start_time,face
-    size(width,height)
-    title("minesweeper p5")
-
-    setBombSpaces(1,6) # set minimum and maximum range of bombs (numbers are multiplied by 5)
-            
+    setBombSpaces(min_bombs,max_bombs) # set minimum and maximum range of bombs (numbers are multiplied by 5)
+    
     for y in range (len(campo)): # checking all Y values (lines)
         
         for x in range (len(campo[y])): # checking through each X value (space in the line)
@@ -122,10 +195,90 @@ def setup():
     # starting game time and setting the face to :)
     start_time = time.time()
     face = ":)"
+    DrawBoard = True
+    game_on = True
+    
+def setup():
+    global bombs, width, height, dificulty
+    size(450,550)
+    title("minesweeper p5")
     # set font
     font = create_font("joystix.monospace-regular.otf",15)
     text_font(font)
     
+def main_menu():
+    global width, height, game_on, DrawBoard
+    
+    custom_rec(0,0,width,height,True,gray,0,black)
+    game_on = False
+    DrawBoard = False
+    
+    push()
+    translate(20,20)
+    custom_rec(0,0,width - 40,200,True,dgray,0,black)
+    custom_tr(0,200,10,200,10,190,True,lgray,0,black)
+    custom_tr(width - 40,0,width - 40,10,width - 50,10,True,lgray,0,black)
+    custom_rec(10,10,width - 50,190,True,lgray,0,black)
+    custom_rec(10,10,width - 60,180,True,gray,0,black)
+    title_screen = load_image("title_screen.png")
+    image(title_screen,25,15)
+    pop()
+    
+    push()
+    translate(width/2 - 150,height/2 - 30)
+    
+    button = [("EASY",green),("INTERMEDIATE",blue),("HARD",red),("EXPERT",purple)]
+    for i in range (4):
+        mode,color = button[i]
+        r,g,b = color
+        custom_rec(0,0,300,50,True,lgray,0,black)
+        custom_tr(300,0,290,10,300,10,True,dgray,0,black)
+        custom_tr(0,50,10,50,10,40,True,dgray,0,black)
+        custom_rec(10,10,290,40,True,dgray,0,black)
+        custom_rec(10,10,280,30,True,gray,0,black)
+        custom_rec(0,0,300,50,False,gray,2,black)
+        fill(r,g,b)
+        text_align(CENTER)
+        text(mode,150,15)
+        
+        translate(0,65)
+    pop()
+    
+    custom_rec(0,height - 23,width,23,True,dgray,0,black)
+    fill(255)
+    text("Game by: Juhxx_                 2023",5,height - 20)
+    
+    dificulty = main_menu_controls()
+    
+    return dificulty
+    
+def main_menu_controls():
+    global dificultyChoosen, game_on, DrawBoard
+    
+    if mouse_button == LEFT:
+        
+        if mouse_x > width/2 - 150 and mouse_x < width/2 + 150 and mouse_y > height/2 - 30 and mouse_y < height/2 + 20:
+            
+            difc ="easy"
+            dificultyChoosen = True
+        elif mouse_x > width/2 - 150 and mouse_x < width/2 + 150 and mouse_y > height/2 + 35 and mouse_y < height/2 + 85:
+            
+            difc ="intermediate"
+            dificultyChoosen = True
+        elif mouse_x > width/2 - 150 and mouse_x < width/2 + 150 and mouse_y > height/2 + 100 and mouse_y < height/2 + 150:
+            
+            difc ="hard"
+            dificultyChoosen = True
+        elif mouse_x > width/2 - 150 and mouse_x < width/2 + 150 and mouse_y > height/2 + 165 and mouse_y < height/2 + 180:
+            
+            difc ="expert"
+            dificultyChoosen = True
+        else:
+            difc = None
+            
+        
+        return difc
+        
 # functions that run the game
 
 def setBombSpaces(rng_min,rng_max):
@@ -315,7 +468,7 @@ def check_button():
         last_button_pressed = str(mouse_button)
 
 def mouse_released():
-    global last_button_pressed,game_on, width, height
+    global last_button_pressed,game_on, width, height, dificulty
 
     if game_on:
         if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
@@ -326,9 +479,9 @@ def mouse_released():
     
     if last_button_pressed == "MouseButton(LEFT)" or last_button_pressed == "MouseButton(LEFT,LEFT)":
             
-            if mouse_x >= (width/2 - 33) and mouse_x <= (width/2 + 33) and mouse_y >= 517 and mouse_y <= 582:
+            if mouse_x >= (width/2 - 33) and mouse_x <= (width/2 + 33) and mouse_y >= (height - 83) and mouse_y <= (height - 18):
 
-                restart_game()
+                start_game(dificulty)
 
 # x and y of the starting space, X difference from start, Y difference from start, how many times do repeat the two loops
 def empty_spaces_modes(indX,indY,mX,mY,rng1,rng2): 
@@ -365,7 +518,7 @@ def empty_spaces(indX,indY):
     elif indY == 0 and indX > 0 and indX < (len(campo[0]) - 1):
         
         empty_spaces_modes(indX,indY,1,0,2,3)
-    elif indY == (len(campo) - 1) and indX > 0 and indX < 9:
+    elif indY == (len(campo) - 1) and indX > 0 and indX < (len(campo[0]) - 1):
         
         empty_spaces_modes(indX,indY,1,-1,2,3)
     elif indX == 0 and indY > 0 and indY < (len(campo) - 1):
@@ -407,7 +560,7 @@ def game_over():
     face = ":("
     push()
     strokeWeight(5)
-    translate(width/2 - 125,230)
+    translate(width/2 - 125,(height - 100)/2 - 20)
     fill(255,0,0)
     scale(2)
     text("GAME OVER",0,0)
@@ -420,18 +573,20 @@ def game_win():
     face = "B)"
     push()
     strokeWeight(5)
-    translate(width/2 - 120,230)
+    translate(width/2 - 120,(height - 100)/2 - 20)
     fill(0,255,0)
     scale(2)
     text("YOU WIN!!",0,0)
     pop()
-       
+ 
+ 
+# drawing functions      
 def UI():
     global bombs,elapsed_time,width,height
     
     bombs = len(minas) - len(flagged)
     push()
-    translate(0,501)
+    translate(0,height - 99)
     custom_rec(0,0,width,100,True,gray,2,black)
     custom_rec(10,10,width - 20,80,True,dgray,0,black)
     custom_rec(15,15,width - 25,75,True,lgray,0,black)
@@ -452,12 +607,10 @@ def UI():
     pop()
     push()
     noStroke()
-    translate(width/2 - 33,517)
+    translate(width/2 - 33,height - 83)
     fill(0)
     draw_face(face)
     pop()               
-         
-# drawing functions
                 
 def draw_flag(x,y,color):
     global bombs
@@ -546,60 +699,72 @@ def draw_face(face):
         
 # draw game
 def draw():
-    
-    global DrawBoard,count,game_on,bombs,start_time,face,elapsed_time
+    global DrawBoard,count,game_on,bombs,start_time,face,elapsed_time,dificultyChoosen, dificulty, loading_game
 
-    end_time = time.time()
-    elapsed_time = int(end_time - start_time)
-    UI()
-    check_button()
-
-    # cheat codes
-
-    if key == "r":
-
-        restart_game()
-    
-    if key == "ENTER":
+    if not dificultyChoosen:
         
-        game_over()
-    
-    if key == "w":
+        dificulty = main_menu()
         
-        game_win()
-    
-    # draw game board
-    while DrawBoard:
-        push()
-        for i in range (len(campo)):
-            push()
-            for i in range (len(campo[0])):
-                push()
-                custom_tr(0,0,50,0,0,50,True,lgray,0,black)
-                custom_tr(50,0,50,50,0,50,True,dgray,0,black)
-                custom_rec(8,8,34,34,True,gray,0,black)
-                pop()
-                translate(50,0,0)
-            pop()
-            translate(0,50,0)
-        pop()
+    else:
         
-        for i in range (len(campo)):
+        
+        while loading_game:
             
-            for i in range (len(campo[0])):
-                
-                custom_rec(50 * i,0,50,50,False,lgray,1,black)
-            translate(0,50)
+            start_game(dificulty)
+            loading_game = False
             
-        DrawBoard = False
-    
+        end_time = time.time()
+        elapsed_time = int(end_time - start_time)
+        check_button()
+        UI()
 
-    if game_on:
+        # cheat codes
+
+        if key == "r":
+
+            restart_game()
         
-        if uncovered == safe:
+        if key == "ENTER":
+            
+            game_over()
+        
+        if key == "w":
             
             game_win()
-            #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        
+        # draw game board
+        while DrawBoard:
+            push()
+            for i in range (len(campo)):
+                push()
+                for i in range (len(campo[0])):
+                    push()
+                    custom_tr(0,0,50,0,0,50,True,lgray,0,black)
+                    custom_tr(50,0,50,50,0,50,True,dgray,0,black)
+                    custom_rec(8,8,34,34,True,gray,0,black)
+                    pop()
+                    translate(50,0,0)
+                pop()
+                translate(0,50,0)
+            pop()
+            
+            for i in range (len(campo)):
+                
+                for i in range (len(campo[0])):
+                    
+                    custom_rec(50 * i,0,50,50,False,lgray,1,black)
+                translate(0,50)
+                
+            DrawBoard = False
+        
+
+        if game_on:
+            
+            
+            if uncovered == safe:
+                
+                game_win()
+                #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     
 
 run()

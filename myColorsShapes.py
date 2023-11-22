@@ -15,6 +15,7 @@ dred = (100,0,0)
 aqua = (0,200,200)
 dgreen = (0,100,0)
 yellow = (235, 207, 30)
+purple = (150,0,200)
 
 #shapes
 def set_bg(color):
